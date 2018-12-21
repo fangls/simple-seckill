@@ -7,6 +7,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * Description：消费BlockingQueueTests中的数据
  * 在启动的时候开始消费，这里需要开启新线程，否则会阻塞启动
@@ -17,18 +19,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class BlockingQueueConsumer implements ApplicationRunner {
 
+    public static CountDownLatch downLatch = new CountDownLatch(1000);
+
     @Autowired
     private GoodsSeckillService seckillService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("开始消费blockingQueue");
         new Thread( ()->{
             try {
                 while (true){
                     Long goodsId = GoodsSeckillService.blockingQueue.take();
                     if (goodsId != null){
                         seckillService.saveGoods(goodsId);
+                        downLatch.countDown();
                     }
                 }
             }catch (Exception e){

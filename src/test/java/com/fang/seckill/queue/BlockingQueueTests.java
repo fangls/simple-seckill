@@ -1,6 +1,7 @@
 package com.fang.seckill.queue;
 
 import com.fang.seckill.BaseTests;
+import com.fang.seckill.consumer.BlockingQueueConsumer;
 import com.fang.seckill.entity.GoodsDO;
 import com.fang.seckill.service.GoodsSeckillService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class BlockingQueueTests extends BaseTests {
             });
         });
 
-        GoodsSeckillService.downLatch.await();
+        BlockingQueueConsumer.downLatch.await();
 
         Optional<GoodsDO> goodsDO = goodsRepository.findById(GOODS_ID);
 

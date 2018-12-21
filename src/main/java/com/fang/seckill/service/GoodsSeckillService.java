@@ -22,7 +22,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class GoodsSeckillService {
 
     public static BlockingQueue<Long> blockingQueue = new LinkedBlockingQueue<>(50);
-    public static CountDownLatch downLatch = new CountDownLatch(1000);
 
     @Autowired
     private GoodsRepository goodsRepository;
@@ -41,9 +40,7 @@ public class GoodsSeckillService {
         GoodsDO goodsDO = goodsRepository.findById(goodsId).get();
 
         if(goodsDO.getNumber() > 0){
-            goodsRepository.updateNumber(goodsDO.getId());
+            goodsRepository.updateNumberWhereNumber(goodsDO.getId());
         }
-
-        downLatch.countDown();
     }
 }
